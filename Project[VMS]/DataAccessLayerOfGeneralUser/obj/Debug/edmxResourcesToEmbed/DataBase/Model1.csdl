@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="VMSSystemModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="UserVM">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="emailphn" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="password" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Fname" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Lname" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Gender" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="nid" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="address" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="usertype" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Vehicles" Relationship="Self.FK_Vehicle_UserVMS1" FromRole="UserVMS" ToRole="Vehicle" />
+    <NavigationProperty Name="DriverLicenses" Relationship="VMSSystemModel.FK_DriverLicense_UserVMS" FromRole="UserVM" ToRole="DriverLicense" />
+  </EntityType>
+  <EntityType Name="Vehicle">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="VehicleType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="VehicleNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="OwnerID" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="UserVM" Relationship="Self.FK_Vehicle_UserVMS1" FromRole="Vehicle" ToRole="UserVMS" />
+  </EntityType>
+  <Association Name="FK_Vehicle_UserVMS1">
+    <End Role="UserVMS" Type="Self.UserVM" Multiplicity="1" />
+    <End Role="Vehicle" Type="Self.Vehicle" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserVMS">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="Vehicle">
+        <PropertyRef Name="OwnerID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="VMSSystemEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="UserVMS" EntityType="Self.UserVM" />
+    <EntitySet Name="Vehicles" EntityType="Self.Vehicle" />
+    <AssociationSet Name="FK_Vehicle_UserVMS1" Association="Self.FK_Vehicle_UserVMS1">
+      <End Role="UserVMS" EntitySet="UserVMS" />
+      <End Role="Vehicle" EntitySet="Vehicles" />
+    </AssociationSet>
+    <EntitySet Name="DriverLicenses" EntityType="VMSSystemModel.DriverLicense" />
+    <AssociationSet Name="FK_DriverLicense_UserVMS" Association="VMSSystemModel.FK_DriverLicense_UserVMS">
+      <End Role="UserVM" EntitySet="UserVMS" />
+      <End Role="DriverLicense" EntitySet="DriverLicenses" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="DriverLicense">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="LicenseID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Issue" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="Expire" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="UID" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="UserVM" Relationship="VMSSystemModel.FK_DriverLicense_UserVMS" FromRole="DriverLicense" ToRole="UserVM" />
+  </EntityType>
+  <Association Name="FK_DriverLicense_UserVMS">
+    <End Type="VMSSystemModel.UserVM" Role="UserVM" Multiplicity="1" />
+    <End Type="VMSSystemModel.DriverLicense" Role="DriverLicense" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserVM">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="DriverLicense">
+        <PropertyRef Name="UID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>
