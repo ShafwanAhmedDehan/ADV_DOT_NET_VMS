@@ -20,5 +20,10 @@ namespace DataAccessLayerVMS
         {
             return new VehicleManage();
         }
+		
+		 public static BasicOperation<UserVM, int, bool> AdminControl()
+        {
+            return new AdminControl();
+        }
     }
 }
